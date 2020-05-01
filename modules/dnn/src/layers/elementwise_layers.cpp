@@ -657,15 +657,12 @@ struct TanHFunctor : public BaseFunctor
 struct SwishFunctor : public BaseFunctor
 {
     typedef SwishLayer Layer;
-    float MISH_THRESHOLD;
-
-    MishFunctor() : MISH_THRESHOLD(20.0f) {}
 
     bool supportBackend(int backendId, int)
     {
         return backendId == DNN_BACKEND_OPENCV ||
                backendId == DNN_BACKEND_CUDA ||
-               backendId == DNN_BACKEND_HALIDE || backendId == DNN_BACKEND_INFERENCE_ENGINE_NGRAPH;;
+               backendId == DNN_BACKEND_HALIDE || backendId == DNN_BACKEND_INFERENCE_ENGINE_NGRAPH;
     }
 
     void apply(const float* srcptr, float* dstptr, int len, size_t planeSize, int cn0, int cn1) const
