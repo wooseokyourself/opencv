@@ -759,12 +759,15 @@ struct SwishFunctor : public BaseFunctor
 struct MishFunctor : public BaseFunctor
 {
     typedef MishLayer Layer;
-
+    float MISH_THRESHOLD;
+    
     bool supportBackend(int backendId, int)
     {
-        return backendId == DNN_BACKEND_OPENCV ||
-               backendId == DNN_BACKEND_CUDA ||
-               backendId == DNN_BACKEND_HALIDE || backendId == DNN_BACKEND_INFERENCE_ENGINE_NGRAPH;
+#ifdef HAVE_DNN_NGRAPH
+        if (backendId == DNN_BACKEND_INFERENCE_ENGINE_NGRAPH)
+            return INF_ENGINE_VER_MAJOR_GT(INF_ENGINE_RELEASE_2020_2);
+#endif
+        return backendId == DNN_BACKEND_OPENCV || backendId == DNN_BACKEND_HALIDE;
     }
 
     void apply(const float* srcptr, float* dstptr, int len, size_t planeSize, int cn0, int cn1) const
